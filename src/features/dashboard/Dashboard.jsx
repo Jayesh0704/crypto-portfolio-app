@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import HistoricalBalance from '../../components/HistoricalBalance'; // Ensure path is correct
-import WalletInfo from '../../features/Wallet/WalletInfo'; // Ensure path is correct
+import HistoricalBalance from '../../components/HistoricalBalance'; 
+import WalletInfo from '../../features/Wallet/WalletInfo';
 
 function Dashboard() {
     const walletAddress = useSelector(state => state.wallet.address);
