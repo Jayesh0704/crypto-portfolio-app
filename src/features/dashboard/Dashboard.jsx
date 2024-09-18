@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import HistoricalBalance from '../../components/HistoricalBalance'; // Update path as needed
+import HistoricalBalance from '../../components/HistoricalBalance'; // Ensure path is correct
+import WalletInfo from '../../features/Wallet/WalletInfo'; // Ensure path is correct
 
 function Dashboard() {
     const walletAddress = useSelector(state => state.wallet.address);
@@ -39,6 +40,7 @@ function Dashboard() {
     return (
         <div>
             <h1>Dashboard</h1>
+            <WalletInfo />
             <div>
                 <h2>Token Balances</h2>
                 {loading ? (
@@ -53,10 +55,7 @@ function Dashboard() {
                     </ul>
                 )}
             </div>
-            <div>
-                <h2>Historical Data</h2>
-                <HistoricalBalance />
-            </div>
+            <HistoricalBalance />
         </div>
     );
 }
