@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import HistoricalBalance from '../../components/HistoricalBalance'; 
-import WalletInfo from '../../features/Wallet/WalletInfo';
+import WalletInfo from '../../features/Wallet/WalletInfo'; 
+import { useWalletContext } from '../../contexts/WalletContext'; // Import the custom wallet context hook
 
 function Dashboard() {
-    const walletAddress = useSelector(state => state.wallet.address);
+    const { walletState } = useWalletContext(); // Use walletState from WalletContext
+    const walletAddress = walletState.address; // Get the wallet address from the walletState
     const [balances, setBalances] = useState({});
     const [loading, setLoading] = useState(true);
 
-    // Simulated fetch function to get token balances (replace with real API calls)
+    
     const fetchBalances = async (address) => {
         setLoading(true);
         try {
