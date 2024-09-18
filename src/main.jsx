@@ -1,21 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';  // Import the Provider
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
-import { store } from './app/store';  // Ensure this path is correct
+import { CurrencyProvider, WalletProvider } from './contexts/Index';
 
-const theme = createTheme();
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>  {/* Include the Provider here with the store */}
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>
+    
+    <CurrencyProvider>
+      <WalletProvider>
+        
+          <CssBaseline />
+          <App />
+       
+      </WalletProvider>
+    </CurrencyProvider>
+  </React.StrictMode>,
 );
