@@ -5,6 +5,12 @@
 /dist
 /build
 
+
+/src/components/Banner/Banner.jsx
+/src/components/Banner/Carousel.jsx
+
+
+
 # Local env files
 .env
 .env.local

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import HistoricalBalance from '../../components/HistoricalBalance'; // Update path as needed
+import HistoricalBalance from '../../components/HistoricalBalance'; 
+import WalletInfo from '../../features/Wallet/WalletInfo'; 
+import { useWalletContext } from '../../contexts/WalletContext'; // Import the custom wallet context hook
 
 function Dashboard() {
-    const walletAddress = useSelector(state => state.wallet.address);
+    const { walletState } = useWalletContext(); // Use walletState from WalletContext
+    const walletAddress = walletState.address; // Get the wallet address from the walletState
     const [balances, setBalances] = useState({});
     const [loading, setLoading] = useState(true);
 
-    // Simulated fetch function to get token balances (replace with real API calls)
+    
     const fetchBalances = async (address) => {
         setLoading(true);
         try {
@@ -39,7 +41,8 @@ function Dashboard() {
     return (
         <div>
             <h1>Dashboard</h1>
-            <div>
+            <WalletInfo />
+            {/* <div>
                 <h2>Token Balances</h2>
                 {loading ? (
                     <p>Loading balances...</p>
@@ -53,10 +56,7 @@ function Dashboard() {
                     </ul>
                 )}
             </div>
-            <div>
-                <h2>Historical Data</h2>
-                <HistoricalBalance />
-            </div>
+            <HistoricalBalance /> */}
         </div>
     );
 }
