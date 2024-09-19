@@ -54,7 +54,7 @@ const CoinPage = () => {
     fetchCoin();
   }, [id]);
 
-  if (!coin) return <LinearProgress sx={{ backgroundColor: "gold" }} />;
+  if (!coin) return <LinearProgress sx={{ backgroundColor: "#30c0bf" }} />;
 
   return (
     <Container style={{ display: "flex", marginTop: 25 }}>
