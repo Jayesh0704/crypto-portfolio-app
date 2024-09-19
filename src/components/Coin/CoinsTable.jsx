@@ -1,6 +1,6 @@
 // src/components/CoinsTable.jsx
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Pagination from "@mui/material/Pagination";
 import {
@@ -17,11 +17,12 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query"; // Updated import for React Query v5
+import { useQuery } from "@tanstack/react-query"; // React Query v5
 import axios from "axios";
 import { CoinList } from "../../config/api";
 import { useNavigate } from "react-router-dom"; // Replacing useHistory with useNavigate
 import { CryptoState } from "../../contexts/CryptoContext";
+import debounce from 'lodash.debounce'; // Import debounce
 
 // Utility function to format numbers with commas
 export function numberWithCommas(x) {
@@ -41,7 +42,7 @@ const Row = styled(TableRow)(({ theme }) => ({
 // Styled Pagination for consistent theming
 const PaginationStyled = styled(Pagination)(({ theme }) => ({
   "& .MuiPaginationItem-root": {
-    color: "gold",
+    color: "#30c0bf",
   },
 }));
 
@@ -64,6 +65,21 @@ export default function CoinsTable() {
     retry: 1, // Retry once on failure
   });
 
+  // Reference to store the debounced function
+  const debouncedSearch = useRef(
+    debounce((value) => {
+      setSearch(value);
+      setPage(1); // Reset to first page on new search
+    }, 300) // 300ms debounce delay
+  ).current;
+
+  // Clean up the debounce on component unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
   // Function to filter coins based on search input
   const handleSearch = () => {
     if (!coins) return []; // Ensure coins is defined
@@ -75,7 +91,7 @@ export default function CoinsTable() {
     );
   };
 
-  // Handle potential undefined data gracefully
+  // Get the filtered coins
   const filteredCoins = handleSearch();
 
   return (
@@ -90,11 +106,11 @@ export default function CoinsTable() {
         label="Search For a Crypto Currency.."
         variant="outlined"
         style={{ marginBottom: 20, width: "100%" }}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => debouncedSearch(e.target.value)} // Use debounced function
       />
       <TableContainer component={Paper}>
         {isLoading ? (
-          <LinearProgress style={{ backgroundColor: "gold" }} />
+          <LinearProgress style={{ backgroundColor: "#30c0bf" }} />
         ) : isError ? (
           <Box sx={{ padding: 2 }}>
             <Typography variant="h6" color="error">
