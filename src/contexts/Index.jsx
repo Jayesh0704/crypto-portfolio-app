@@ -1,2 +1,4 @@
-export { CurrencyProvider, useCurrencyContext } from './CurrencyContext';
-export { WalletProvider, useWalletContext } from './WalletContext';
+
+export {  WalletProvider, useWalletContext } from './WalletContext';
+
+export { default as CryptoContext } from './CryptoContext';

@@ -42,7 +42,7 @@ function Dashboard() {
         <div>
             <h1>Dashboard</h1>
             <WalletInfo />
-            <div>
+            {/* <div>
                 <h2>Token Balances</h2>
                 {loading ? (
                     <p>Loading balances...</p>
@@ -56,7 +56,7 @@ function Dashboard() {
                     </ul>
                 )}
             </div>
-            <HistoricalBalance />
+            <HistoricalBalance /> */}
         </div>
     );
 }
