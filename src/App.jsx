@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
  import Header from './components/Header/Header';
 import WalletConnection from './features/Wallet/WalletConnection';
-import Dashboard from './features/dashboard/Dashboard';
+import CoinPage from "./components/Coin/CoinPage";
 
 import { useWalletContext } from './contexts/WalletContext'; // Import the custom wallet context hook
 import Homepage from './features/HomePage/HomePage';
@@ -17,7 +17,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={walletState.isConnected ? <Homepage /> : <WalletConnection />} />
-          {/* Removed exact as it's not needed in React Router v6 */}
+          <Route path="/coins/:id" element={<CoinPage/>} exact />
         </Routes>
       </div>
     </Router>
