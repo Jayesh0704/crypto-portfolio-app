@@ -1,3 +1,5 @@
+// src/components/Header/Header.jsx
+
 import React from "react";
 import {
   AppBar,
@@ -5,8 +7,6 @@ import {
   Typography,
   Select,
   MenuItem,
-  ThemeProvider,
-  createTheme,
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -40,6 +40,12 @@ const Header = () => {
             </Button>
             <Button color="inherit" component={Link} to="/token-transfer">
               Token Transfer
+            </Button>
+            <Button color="inherit" component={Link} to="/allowance-check">
+              Allowance Check
+            </Button>
+            <Button color="inherit" component={Link} to="/allowance-approve">
+              Approve Allowance
             </Button>
             <Button color="inherit" onClick={disconnectWallet}>
               Disconnect

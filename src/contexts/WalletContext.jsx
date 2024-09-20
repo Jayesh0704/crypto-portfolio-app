@@ -5,38 +5,43 @@ import { ethers } from 'ethers';
 
 const WalletContext = createContext();
 
+/**
+ * @dev WalletProvider manages the wallet connection state and provides provider and signer to the application.
+ */
 export const WalletProvider = ({ children }) => {
     const [walletState, setWalletState] = useState({
         address: '',
         ethBalance: '0',
-        profitLoss: 0, // Assuming this is part of your state
         isConnected: false,
     });
+    const [provider, setProvider] = useState(null);
+    const [signer, setSigner] = useState(null);
 
     // Function to connect wallet
     const connectWallet = useCallback(async () => {
         if (window.ethereum) {
             try {
                 // Request account access
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
+                const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+                await web3Provider.send("eth_requestAccounts", []);
+                const signer = web3Provider.getSigner();
                 const address = await signer.getAddress();
-                const balance = await provider.getBalance(address);
+                const balance = await web3Provider.getBalance(address);
                 const formattedBalance = ethers.utils.formatEther(balance);
 
+                setProvider(web3Provider);
+                setSigner(signer);
                 setWalletState({
                     address,
                     ethBalance: formattedBalance,
-                    profitLoss: 0, // Initialize or fetch as needed
                     isConnected: true,
                 });
+                console.log(`Wallet connected: ${address}`);
             } catch (error) {
                 console.error('Error connecting to MetaMask:', error);
                 setWalletState({
                     address: '',
                     ethBalance: '0',
-                    profitLoss: 0,
                     isConnected: false,
                 });
             }
@@ -47,21 +52,21 @@ export const WalletProvider = ({ children }) => {
 
     // Function to disconnect wallet
     const disconnectWallet = useCallback(() => {
+        setProvider(null);
+        setSigner(null);
         setWalletState({
             address: '',
             ethBalance: '0',
-            profitLoss: 0,
             isConnected: false,
         });
+        console.log('Wallet disconnected');
     }, []);
 
     // Function to fetch wallet details
     const fetchWalletDetails = useCallback(async () => {
-        if (!walletState.isConnected || !walletState.address) return;
+        if (!walletState.isConnected || !walletState.address || !provider) return;
 
         try {
-            // Use Infura's Sepolia endpoint from environment variables
-            const provider = new ethers.providers.JsonRpcProvider(import.meta.env.VITE_INFURA_SEPOLIA_ENDPOINT);
             const balance = await provider.getBalance(walletState.address);
             const formattedBalance = ethers.utils.formatEther(balance);
 
@@ -69,10 +74,11 @@ export const WalletProvider = ({ children }) => {
                 ...prevState,
                 ethBalance: formattedBalance,
             }));
+            console.log(`Fetched balance: ${formattedBalance} ETH`);
         } catch (error) {
             console.error('Error fetching wallet details:', error);
         }
-    }, [walletState.isConnected, walletState.address]);
+    }, [walletState.isConnected, walletState.address, provider]);
 
     // Handle account and network changes
     useEffect(() => {
@@ -93,7 +99,7 @@ export const WalletProvider = ({ children }) => {
     }, [connectWallet, disconnectWallet, fetchWalletDetails]);
 
     return (
-        <WalletContext.Provider value={{ walletState, connectWallet, disconnectWallet, fetchWalletDetails }}>
+        <WalletContext.Provider value={{ walletState, connectWallet, disconnectWallet, fetchWalletDetails, provider, signer }}>
             {children}
         </WalletContext.Provider>
     );
