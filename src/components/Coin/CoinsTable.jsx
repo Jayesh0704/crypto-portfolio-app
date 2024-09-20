@@ -1,3 +1,4 @@
+
 // src/components/CoinsTable.jsx
 
 import React, { useState, useRef, useEffect } from "react";
@@ -17,12 +18,12 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query"; // React Query v5
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { CoinList } from "../../config/api";
-import { useNavigate } from "react-router-dom"; // Replacing useHistory with useNavigate
+import { useNavigate } from "react-router-dom";
 import { CryptoState } from "../../contexts/CryptoContext";
-import debounce from 'lodash.debounce'; // Import debounce
+import debounce from 'lodash.debounce';
 
 // Utility function to format numbers with commas
 export function numberWithCommas(x) {
@@ -31,10 +32,10 @@ export function numberWithCommas(x) {
 
 // Styled TableRow for better UI
 const Row = styled(TableRow)(({ theme }) => ({
-  backgroundColor: "#16171a",
+  backgroundColor: "#1e1e1e",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#131111",
+    backgroundColor: "#2a2a2a",
   },
   fontFamily: "Montserrat",
 }));
@@ -54,7 +55,7 @@ export default function CoinsTable() {
 
   // Context and navigation hooks
   const { currency, symbol } = CryptoState();
-  const navigate = useNavigate(); // Updated to use useNavigate
+  const navigate = useNavigate();
 
   // React Query to fetch coins data
   const { data: coins, isLoading, isError, error } = useQuery({
@@ -95,20 +96,21 @@ export default function CoinsTable() {
   const filteredCoins = handleSearch();
 
   return (
-    <Container style={{ textAlign: "center" }}>
+    <Container style={{ textAlign: "center", color: "#ffffff" }}>
       <Typography
         variant="h4"
-        style={{ margin: 18, fontFamily: "Montserrat" }}
+        style={{ margin: 18, fontFamily: "Montserrat", color: "#30c0bf" }}
       >
         Cryptocurrency Prices by Market Cap
       </Typography>
       <TextField
-        label="Search For a Crypto Currency.."
+        label="Search For a Cryptocurrency.."
         variant="outlined"
-        style={{ marginBottom: 20, width: "100%" }}
-        onChange={(e) => debouncedSearch(e.target.value)} // Use debounced function
+        style={{ marginBottom: 20, width: "100%", backgroundColor: "#2a2a2a", borderRadius: 5, color:"#fff" }}
+        onChange={(e) => debouncedSearch(e.target.value)}
+      
       />
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "#1e1e1e" }}>
         {isLoading ? (
           <LinearProgress style={{ backgroundColor: "#30c0bf" }} />
         ) : isError ? (
@@ -120,15 +122,17 @@ export default function CoinsTable() {
             </Typography>
           </Box>
         ) : (
-          <Table aria-label="simple table">
-            <TableHead style={{ backgroundColor: "#30c0bf" }}>
+          <Table aria-label="cryptocurrency table">
+            <TableHead>
               <TableRow>
-                {["Coin", "Price", "24h Change", "Market Cap"].map((head) => (
+                {["COIN", "PRICE", "24H CHANGE", "30D CHANGE", "1Y CHANGE", "MARKET CAP"].map((head) => (
                   <TableCell
                     style={{
-                      color: "black",
+                      color: "#fff",
                       fontWeight: "700",
                       fontFamily: "Montserrat",
+                      fontSize: 18,
+                      
                     }}
                     key={head}
                     align={head === "Coin" ? "left" : "right"}
@@ -143,11 +147,14 @@ export default function CoinsTable() {
               {filteredCoins
                 .slice((page - 1) * 10, (page - 1) * 10 + 10)
                 .map((row) => {
-                  const profit = row.price_change_percentage_24h > 0;
+                  const profit24h = row.price_change_percentage_24h_in_currency > 0;
+                  const profit30d = row.price_change_percentage_30d_in_currency > 0;
+                  const profit1y = row.price_change_percentage_1y_in_currency > 0;
+
                   return (
                     <Row
                       onClick={() => navigate(`/coins/${row.id}`)}
-                      key={row.id} // Use unique key, row.id is better than row.name
+                      key={row.id} // Use unique key
                     >
                       <TableCell
                         component="th"
@@ -155,6 +162,7 @@ export default function CoinsTable() {
                         style={{
                           display: "flex",
                           gap: 15,
+                          color: "#ffffff",
                         }}
                       >
                         <img
@@ -170,30 +178,60 @@ export default function CoinsTable() {
                             style={{
                               textTransform: "uppercase",
                               fontSize: 22,
+                              color: "#fff",
                             }}
                           >
                             {row.symbol}
                           </span>
-                          <span style={{ color: "darkgrey" }}>
+                          <span style={{ color: "darkgrey", fontFamily: "Montserrat" }}>
                             {row.name}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ color: "#ffffff", fontFamily: "Montserrat" }}>
                         {symbol}{" "}
                         {numberWithCommas(row.current_price.toFixed(2))}
                       </TableCell>
                       <TableCell
                         align="right"
                         style={{
-                          color: profit ? "rgb(14, 203, 129)" : "red",
+                          color: profit24h ? "green" : "red",
                           fontWeight: 500,
+                          fontFamily: "Montserrat",
                         }}
                       >
-                        {profit && "+"}
-                        {row.price_change_percentage_24h.toFixed(2)}%
+                        {profit24h && "+"}
+                        {row.price_change_percentage_24h_in_currency
+                          ? row.price_change_percentage_24h_in_currency.toFixed(2)
+                          : "0.00"}%
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell
+                        align="right"
+                        style={{
+                          color: profit30d ? "green" : "red",
+                          fontWeight: 500,
+                          fontFamily: "Montserrat",
+                        }}
+                      >
+                        {profit30d && "+"}
+                        {row.price_change_percentage_30d_in_currency
+                          ? row.price_change_percentage_30d_in_currency.toFixed(2)
+                          : "0.00"}%
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{
+                          color: profit1y ? "green" : "red",
+                          fontWeight: 500,
+                          fontFamily: "Montserrat",
+                        }}
+                      >
+                        {profit1y && "+"}
+                        {row.price_change_percentage_1y_in_currency
+                          ? row.price_change_percentage_1y_in_currency.toFixed(2)
+                          : "0.00"}%
+                      </TableCell>
+                      <TableCell align="right" sx={{ color: "#ffffff", fontFamily: "Montserrat" }}>
                         {symbol}{" "}
                         {numberWithCommas(
                           row.market_cap.toString().slice(0, -6)
@@ -226,3 +264,5 @@ export default function CoinsTable() {
     </Container>
   );
 }
+
+

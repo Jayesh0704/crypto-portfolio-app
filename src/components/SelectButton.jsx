@@ -2,18 +2,17 @@ import { styled } from '@mui/material/styles';
 
 const SelectButton = ({ children, selected, onClick }) => {
   const StyledButton = styled('span')(({ theme }) => ({
-    border: '1px solid gold',
-    borderRadius: 5,
-    padding: '10px 20px',
-    fontFamily: 'Montserrat',
-    cursor: 'pointer',
-    backgroundColor: selected ? 'gold' : '',
-    color: selected ? 'black' : '',
-    fontWeight: selected ? 700 : 500,
-    '&:hover': {
-      backgroundColor: 'gold',
-      color: 'black',
+    borderRadius: "5px",
+    border: "1px solid #30c0bf", // Use primary color
+    backgroundColor: selected ? "#30c0bf" : "transparent",
+    color: selected ? "#fff" : "#30c0bf",
+    fontWeight: 700,
+    padding: "10px 24px",
+    "&:hover": {
+      backgroundColor: selected ? "#28a79d" : "#30c0bf",
+      color: "#fff",
     },
+  
     width: '22%',
   }));
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { ethers } from 'ethers';
 import { useWalletContext } from '../contexts/WalletContext';
+import Header from './Header/Header';
 
 const TokenTransfer = () => {
     const { walletState } = useWalletContext();
@@ -127,6 +128,8 @@ const TokenTransfer = () => {
     };
 
     return (
+        <>
+        <Header />
         <Box sx={{ maxWidth: 500, margin: 'auto', padding: 4, border: '1px solid #ccc', borderRadius: 2, mt: 5 }}>
             <Typography variant="h5" gutterBottom>
                 Send ETH on Sepolia
@@ -189,6 +192,7 @@ const TokenTransfer = () => {
                 </Alert>
             </Snackbar>
         </Box>
+        </>
     );
 };
 

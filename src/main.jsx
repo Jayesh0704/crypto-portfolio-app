@@ -9,16 +9,19 @@ import {
   CryptoContext,
   WalletProvider,
   AllowanceProvider,
-} from "./features/AllowanceCheck/Index"; // Ensure correct imports
+} from "./contexts/Index"; 
 import ErrorBoundary from "./components/ErrorBoundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#ffffff", // Example color
+      main: "#30c0bf", // Updated primary color
     },
-    mode: "dark", // for dark mode you can define additional properties as needed
+    mode: "dark", 
+  },
+  typography: {
+    fontFamily: "Montserrat, sans-serif", // Ensure consistent font across the app
   },
 });
 
@@ -30,8 +33,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <CryptoContext>
         <WalletProvider>
           <AllowanceProvider>
-            {" "}
-            {/* Correctly wrap AllowanceProvider */}
             <CssBaseline />
             <ErrorBoundary>
               <QueryClientProvider client={queryClient}>

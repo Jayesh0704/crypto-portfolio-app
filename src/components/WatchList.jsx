@@ -24,6 +24,7 @@ import { CoinList } from "../config/api"; // Adjust the import path as needed
 import { useNavigate } from "react-router-dom"; // Replacing useHistory with useNavigate
 import { CryptoState } from "../contexts/CryptoContext";
 import debounce from 'lodash.debounce'; // Import debounce
+import Header from "./Header/Header";
 
 // Utility function to format numbers with commas
 export function numberWithCommas(x) {
@@ -96,6 +97,8 @@ const Watchlist = () => {
   const filteredCoins = handleSearch();
 
   return (
+    <>
+    <Header />
     <Container style={{ textAlign: "center", marginTop: 25 }}>
       <Typography
         variant="h4"
@@ -251,6 +254,7 @@ const Watchlist = () => {
         </>
       )}
     </Container>
+    </>
   );
 };
 
