@@ -29,12 +29,12 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 }));
 
 const Sidebar = styled(Box)(({ theme }) => ({
-  width: "50%",
+  width: "40%",
   
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  marginRight: ".2rem", // Increased margin for more space
+  marginRight: ".2rem", 
   [theme.breakpoints.down("md")]: {
     width: "100%",
     marginRight: 0,
