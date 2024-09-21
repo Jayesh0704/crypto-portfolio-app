@@ -1,4 +1,5 @@
 
+
 // src/components/CoinsTable.jsx
 
 import React, { useState, useRef, useEffect } from "react";
@@ -24,13 +25,14 @@ import { CoinList } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { CryptoState } from "../../contexts/CryptoContext";
 import debounce from 'lodash.debounce';
+import Header from "../Header/Header";
 
 // Utility function to format numbers with commas
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// Styled TableRow for better UI
+// Styled components for TableRow and Pagination
 const Row = styled(TableRow)(({ theme }) => ({
   backgroundColor: "#1e1e1e",
   cursor: "pointer",
@@ -40,7 +42,6 @@ const Row = styled(TableRow)(({ theme }) => ({
   fontFamily: "Montserrat",
 }));
 
-// Styled Pagination for consistent theming
 const PaginationStyled = styled(Pagination)(({ theme }) => ({
   "& .MuiPaginationItem-root": {
     color: "#30c0bf",
@@ -96,172 +97,233 @@ export default function CoinsTable() {
   const filteredCoins = handleSearch();
 
   return (
-    <Container style={{ textAlign: "center", color: "#ffffff" }}>
-      <Typography
-        variant="h4"
-        style={{ margin: 18, fontFamily: "Montserrat", color: "#30c0bf" }}
-      >
-        Cryptocurrency Prices by Market Cap
-      </Typography>
-      <TextField
-        label="Search For a Cryptocurrency.."
-        variant="outlined"
-        style={{ marginBottom: 20, width: "100%", backgroundColor: "#2a2a2a", borderRadius: 5, color:"#fff" }}
-        onChange={(e) => debouncedSearch(e.target.value)}
-      
-      />
-      <TableContainer component={Paper} sx={{ backgroundColor: "#1e1e1e" }}>
-        {isLoading ? (
-          <LinearProgress style={{ backgroundColor: "#30c0bf" }} />
-        ) : isError ? (
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="h6" color="error">
-              {error.response && error.response.status === 429
-                ? "Rate limit exceeded. Please try again later."
-                : "Failed to fetch coins data."}
-            </Typography>
-          </Box>
-        ) : (
-          <Table aria-label="cryptocurrency table">
-            <TableHead>
-              <TableRow>
-                {["COIN", "PRICE", "24H CHANGE", "30D CHANGE", "1Y CHANGE", "MARKET CAP"].map((head) => (
-                  <TableCell
-                    style={{
-                      color: "#fff",
-                      fontWeight: "700",
-                      fontFamily: "Montserrat",
-                      fontSize: 18,
-                      
-                    }}
-                    key={head}
-                    align={head === "Coin" ? "left" : "right"}
-                  >
-                    {head}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {filteredCoins
-                .slice((page - 1) * 10, (page - 1) * 10 + 10)
-                .map((row) => {
-                  const profit24h = row.price_change_percentage_24h_in_currency > 0;
-                  const profit30d = row.price_change_percentage_30d_in_currency > 0;
-                  const profit1y = row.price_change_percentage_1y_in_currency > 0;
-
-                  return (
-                    <Row
-                      onClick={() => navigate(`/coins/${row.id}`)}
-                      key={row.id} // Use unique key
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        style={{
-                          display: "flex",
-                          gap: 15,
-                          color: "#ffffff",
-                        }}
-                      >
-                        <img
-                          src={row?.image}
-                          alt={row.name}
-                          height="50"
-                          style={{ marginBottom: 10 }}
-                        />
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <span
-                            style={{
-                              textTransform: "uppercase",
-                              fontSize: 22,
-                              color: "#fff",
-                            }}
-                          >
-                            {row.symbol}
-                          </span>
-                          <span style={{ color: "darkgrey", fontFamily: "Montserrat" }}>
-                            {row.name}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "#ffffff", fontFamily: "Montserrat" }}>
-                        {symbol}{" "}
-                        {numberWithCommas(row.current_price.toFixed(2))}
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        style={{
-                          color: profit24h ? "green" : "red",
-                          fontWeight: 500,
-                          fontFamily: "Montserrat",
-                        }}
-                      >
-                        {profit24h && "+"}
-                        {row.price_change_percentage_24h_in_currency
-                          ? row.price_change_percentage_24h_in_currency.toFixed(2)
-                          : "0.00"}%
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        style={{
-                          color: profit30d ? "green" : "red",
-                          fontWeight: 500,
-                          fontFamily: "Montserrat",
-                        }}
-                      >
-                        {profit30d && "+"}
-                        {row.price_change_percentage_30d_in_currency
-                          ? row.price_change_percentage_30d_in_currency.toFixed(2)
-                          : "0.00"}%
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        style={{
-                          color: profit1y ? "green" : "red",
-                          fontWeight: 500,
-                          fontFamily: "Montserrat",
-                        }}
-                      >
-                        {profit1y && "+"}
-                        {row.price_change_percentage_1y_in_currency
-                          ? row.price_change_percentage_1y_in_currency.toFixed(2)
-                          : "0.00"}%
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "#ffffff", fontFamily: "Montserrat" }}>
-                        {symbol}{" "}
-                        {numberWithCommas(
-                          row.market_cap.toString().slice(0, -6)
-                        )}
-                        M
-                      </TableCell>
-                    </Row>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        )}
-      </TableContainer>
-
-      {!isLoading && !isError && (
-        <PaginationStyled
-          count={Math.ceil(filteredCoins.length / 10)}
-          style={{
-            padding: 20,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
+    <>
+      <Header />
+      <Container sx={{ textAlign: "center", color: "#ffffff", mt: 1 }}>
+        <Typography
+          variant="h4"
+          sx={{ margin: 3, fontFamily: "Montserrat", color: "#fff" }}
+        >
+          Cryptocurrency Prices by Market Cap
+        </Typography>
+        <TextField
+          label="Search For a Cryptocurrency.."
+          variant="outlined"
+          sx={{
+            marginBottom: 4,
+            width: { xs: "100%", sm: "50%", md: "40%" },
+            backgroundColor: "#2a2a2a",
+            borderRadius: 1,
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#30c0bf",
+              },
+              "&:hover fieldset": {
+                borderColor: "#30c0bf",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#30c0bf",
+              },
+              color: "#fff",
+            },
+            "& .MuiInputLabel-root": {
+              color: "#fff",
+            },
           }}
-          onChange={(_, value) => {
-            setPage(value);
-            window.scroll(0, 450);
+          onChange={(e) => debouncedSearch(e.target.value)}
+          InputProps={{
+            placeholder: "Search for a cryptocurrency...",
           }}
         />
-      )}
-    </Container>
+        <Box sx={{ overflowX: 'auto' }}>
+          <TableContainer component={Paper} sx={{ backgroundColor: "#1e1e1e" }}>
+            {isLoading ? (
+              <LinearProgress sx={{ backgroundColor: "#30c0bf" }} />
+            ) : isError ? (
+              <Box sx={{ padding: 2 }}>
+                <Typography variant="h6" color="error">
+                  {error.response && error.response.status === 429
+                    ? "Rate limit exceeded. Please try again later."
+                    : "Failed to fetch coins data."}
+                </Typography>
+              </Box>
+            ) : (
+              <Table aria-label="cryptocurrency table">
+                <TableHead>
+                  <TableRow>
+                    {["COIN", "PRICE", "24H CHANGE", "1Y CHANGE", "MARKET CAP"].map((head) => (
+                      <TableCell
+                        key={head}
+                        align={head === "COIN" ? "left" : "right"}
+                        sx={{
+                          color: "#fff",
+                          fontWeight: "700",
+                          fontFamily: "Montserrat",
+                          fontSize: { xs: 10, sm: 12, md: 16 },
+                        }}
+                      >
+                        {head}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {filteredCoins
+                    .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                    .map((row) => {
+                      const profit24h = row.price_change_percentage_24h_in_currency > 0;
+                      const profit1y = row.price_change_percentage_1y_in_currency > 0;
+
+                      return (
+                        <Row
+                          onClick={() => navigate(`/coins/${row.id}`)}
+                          key={row.id} // Use unique key
+                          className="animate-item"
+                        >
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            sx={{
+                              display: "flex",
+                              gap: 2,
+                              color: "#ffffff",
+                              fontFamily: "Montserrat",
+                              fontSize: { xs: 10, sm: 12, md: 16 },
+                              alignItems: "center",
+                            }}
+                          >
+                            {/* Coin Image and Name (Hidden on xs) */}
+                            <Box
+                              sx={{
+                                display: { xs: "none", sm: "flex" },
+                                alignItems: "center",
+                                gap: 2,
+                              }}
+                            >
+                              <img
+                                src={row?.image}
+                                alt={`${row.name} logo`}
+                                height={40}
+                                style={{ borderRadius: "50%" }}
+                                loading="lazy"
+                              />
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "flex-start",
+                                }}
+                              >
+                                <Typography
+                                  variant="body1"
+                                  sx={{
+                                    textTransform: "uppercase",
+                                    fontSize: { xs: "0.7rem", sm: ".9rem", md: "1.2rem" },
+                                    color: "#fff",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {row.symbol}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "darkgrey",
+                                    fontFamily: "Montserrat",
+                                    fontSize: { xs: "0.6rem", sm: "0.8rem", md: "1rem" },
+                                  }}
+                                >
+                                  {row.name}
+                                </Typography>
+                              </Box>
+                            </Box>
+
+                            {/* Coin Symbol (Visible on xs) */}
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                display: { xs: "block", sm: "none" },
+                                textTransform: "uppercase",
+                                fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
+                                color: "#fff",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {row.symbol}
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{ color: "#ffffff", fontFamily: "Montserrat", fontSize: { xs: 8.5, sm: 12, md: 16 } }}
+                          >
+                            {symbol}{" "}
+                            {numberWithCommas(row.current_price.toFixed(2))}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color: profit24h ? "green" : "red",
+                              fontWeight: 500,
+                              fontFamily: "Montserrat",
+                              fontSize: { xs: 10, sm: 12, md: 16 },
+                            }}
+                          >
+                            {profit24h && "+"}
+                            {row.price_change_percentage_24h_in_currency
+                              ? row.price_change_percentage_24h_in_currency.toFixed(2)
+                              : "0.00"}%
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color: profit1y ? "green" : "red",
+                              fontWeight: 500,
+                              fontFamily: "Montserrat",
+                              fontSize: { xs: 10, sm: 12, md: 16 },
+                            }}
+                          >
+                            {profit1y && "+"}
+                            {row.price_change_percentage_1y_in_currency
+                              ? row.price_change_percentage_1y_in_currency.toFixed(2)
+                              : "0.00"}%
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{ color: "#ffffff", fontFamily: "Montserrat", fontSize: { xs: 8.5, sm: 11, md: 16 } }}
+                          >
+                            {symbol}{" "}
+                            {numberWithCommas(
+                              (row.market_cap / 1e6).toFixed(2)
+                            )}
+                            M
+                          </TableCell>
+                        </Row>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            )}
+          </TableContainer>
+        </Box>
+
+        {!isLoading && !isError && (
+          <PaginationStyled
+            count={Math.ceil(filteredCoins.length / 10)}
+            sx={{
+              padding: 2,
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+            onChange={(_, value) => {
+              setPage(value);
+              window.scrollTo({ top: 450, behavior: "smooth" });
+            }}
+          />
+        )}
+      </Container>
+    </>
   );
 }
 

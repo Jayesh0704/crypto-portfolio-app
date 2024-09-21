@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+// src/components/Header.jsx
+
+import React, { useState, useRef, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
   Typography,
   Select,
   MenuItem,
-  Button,
   IconButton,
   Menu,
   Box,
@@ -16,6 +17,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useWalletContext } from "../../contexts/WalletContext";
 import { CryptoState } from "../../contexts/CryptoContext";
+import { staggerSlideInFromTop } from "../Animations"; // Ensure correct path
 
 const Header = () => {
   const { walletState, connectWallet, disconnectWallet } = useWalletContext();
@@ -33,15 +35,29 @@ const Header = () => {
   };
 
   const menuItems = [
-    { label: "My Watchlist", path: "/watchlist" },
-    { label: "Token Transfer", path: "/token-transfer" },
-    { label: "Allowance Check", path: "/allowance-check" },
-    { label: "Approve Allowance", path: "/allowance-approve" },
+    { label: "Check Cryptos", path: "/coins" },
+    { label: "My watchlist", path: "/watchlist" },
+    { label: "Token transfer", path: "/token-transfer" },
+    { label: "Approve allowance", path: "/allowance-approve" },
+    { label: "Allowance check", path: "/allowance-check" },
+   
   ];
 
+  // Ref for the container to apply animations
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const container = headerRef.current;
+    if (container) {
+      const animateItems = container.querySelectorAll(".animate-item");
+      staggerSlideInFromTop(animateItems, 0.2); // Apply staggered animation
+    }
+  }, []);
+
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static"  color="transparent" ref={headerRef} elevation={0}>
       <Toolbar>
+       
         <Typography
           variant="h4"
           component={Link}
@@ -52,32 +68,62 @@ const Header = () => {
             fontWeight: "bold",
             textDecoration: "none",
             fontFamily: "Montserrat",
+            textTransform: "none",
+            fontSize: {
+              xs: "1.2rem",
+              sm: "1.5rem",
+              md: "1.8rem",
+              lg: "2rem",
+            },
+            transition: "text-shadow 0.3s ease",
+            "&:hover": {
+              textShadow: "0 0 2px rgba(48, 192, 191, 0.8)",
+            },
+
+
           }}
+          className="animate-item" // Add class for animation
         >
           CryptoDocker
         </Typography>
+
         {walletState.isConnected ? (
           <>
+            {/* Currency Selector */}
             <Select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
-              variant="outlined"
               sx={{
                 width: 100,
                 height: 40,
                 marginRight: 2,
-                color: "#30c0bf",
-                borderColor: "#30c0bf",
+                color: "#DCDCDC",
+                "& .MuiSvgIcon-root": {
+                  color: "#DCDCDC",
+                },
+                "& .MuiSelect-select": {
+                  padding: "10px 8px",
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                },
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#30c0bf",
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#30c0bf",
                 },
-                "& .MuiSvgIcon-root": {
-                  color: "#30c0bf",
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#30c0bf",
                 },
+                backgroundColor: "transparent",
+                borderRadius: 1,
+                transition: "border-color 0.3s ease",
+
               }}
+              className="animate-item" // Add class for animation
             >
               <MenuItem value={"INR"}>INR</MenuItem>
               <MenuItem value={"USD"}>USD</MenuItem>
@@ -85,8 +131,10 @@ const Header = () => {
               <MenuItem value={"JPY"}>JPY</MenuItem>
             </Select>
 
+            {/* Navigation Items */}
             {isMobile ? (
               <>
+                {/* Mobile Menu Icon */}
                 <IconButton
                   size="large"
                   edge="start"
@@ -94,9 +142,12 @@ const Header = () => {
                   aria-label="menu"
                   onClick={handleMenu}
                   sx={{ color: "#30c0bf" }}
+                  className="animate-item" // Add class for animation
                 >
                   <MenuIcon />
                 </IconButton>
+
+                {/* Mobile Menu */}
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
@@ -111,6 +162,13 @@ const Header = () => {
                   }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                      backdropFilter: "blur(5px)",
+
+                    },
+                  }}
                 >
                   {menuItems.map((item, index) => (
                     <MenuItem
@@ -119,50 +177,89 @@ const Header = () => {
                       component={Link}
                       to={item.path}
                       sx={{
-                        color: "#30c0bf",
+                        color: "#DCDCDC",
                         fontWeight: "bold",
                         fontFamily: "Montserrat",
+                        textTransform: "none",
+                        fontSize: {
+                          xs: "0.8rem",
+                          sm: "0.9rem",
+                          md: "1rem",
+                        },
+                        transition: "text-shadow 0.3s ease",
+                        "&:hover": {
+                          textShadow: "0 0 8px rgba(48, 192, 191, 0.8)",
+                          color: "#30c0bf",
+                        },
+                      
                       }}
+                      className="animate-item" // Add class for animation
                     >
                       {item.label}
                     </MenuItem>
                   ))}
-              
                 </Menu>
               </>
             ) : (
-              <Box>
+              <Box display="flex" alignItems="center">
                 {menuItems.map((item, index) => (
-                  <Button
+                  <Typography
                     key={index}
                     component={Link}
                     to={item.path}
-                    color="inherit"
                     sx={{
-                      color: "#30c0bf",
+                      color: "#DCDCDC",
                       fontWeight: "bold",
                       fontFamily: "Montserrat",
+                      textDecoration: "none",
+                      
+                      marginLeft: 3, 
+                      fontSize: {
+                        xs: "0.9rem",
+                        sm: "1rem",
+                        md: "1.1rem",
+                        lg: "1.2rem",
+                      },
+                      transition: "text-shadow 0.3s ease, color 0.3s ease",
+                      "&:hover": {
+                        
+                        color: "#30c0bf",
+                      },
+
                     }}
+                    className="animate-item" // Add class for animation
                   >
                     {item.label}
-                  </Button>
+                  </Typography>
                 ))}
-         
               </Box>
             )}
           </>
         ) : (
-          <Button
-            color="inherit"
+          <Typography
             onClick={connectWallet}
             sx={{
-              color: "#30c0bf",
+              color: "#DCDCDC",
               fontWeight: "bold",
               fontFamily: "Montserrat",
+              cursor: "pointer",
+              textTransform: "none", 
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1.1rem",
+                lg: "1.2rem",
+              },
+              transition: "text-shadow 0.3s ease, color 0.3s ease",
+              "&:hover": {
+               
+                color: "#30c0bf",
+              },
             }}
+            className="animate-item" // Add class for animation
           >
             Connect Wallet
-          </Button>
+          </Typography>
         )}
       </Toolbar>
     </AppBar>
@@ -170,3 +267,6 @@ const Header = () => {
 };
 
 export default Header;
+
+
+// src/components/Header.jsx

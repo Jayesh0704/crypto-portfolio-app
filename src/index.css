@@ -4,6 +4,7 @@
 
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 /* Existing global styles */
 * {
@@ -35,4 +36,16 @@ body {
   /* Ensure content is placed on top of the gradient */
   background-attachment: fixed;
   background-size: cover;
+}
+
+
+
+/* For Locomotive Scroll */
+
+[data-scroll-container] {
+  overflow: hidden;
+}
+
+html.has-scroll-smooth [data-scroll-container] {
+  will-change: transform;
 }

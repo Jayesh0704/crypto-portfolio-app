@@ -95,10 +95,10 @@ export const AllowanceProvider = ({ children }) => {
         }
 
         try {
-            // Initialize the contract with signer
+           
             const contract = new ethers.Contract(ERC20_CONTRACT_ADDRESS, ERC20ABI, signer);
 
-            // Convert amount to the token's smallest unit
+            
             const decimals = await contract.decimals();
             const amountInWei = ethers.utils.parseUnits(amount.toString(), decimals);
 

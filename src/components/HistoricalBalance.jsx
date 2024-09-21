@@ -12,7 +12,7 @@ function HistoricalBalance({ userAddress }) {
   const [historicalData, setHistoricalData] = useState([])
 
   const fetchHistoricalData = async () => {
-    // This is a placeholder. You would typically fetch this data from an API
+   
     const mockData = [
       { date: '2023-01-01', balance: 100 },
       { date: '2023-02-01', balance: 150 },
