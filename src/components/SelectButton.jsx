@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 const SelectButton = ({ children, selected, onClick }) => {
   const StyledButton = styled('span')(({ theme }) => ({
     borderRadius: "5px",
-    border: "1px solid #30c0bf", // Use primary color
+    border: "1px solid #30c0bf", 
     backgroundColor: selected ? "#30c0bf" : "transparent",
     color: selected ? "#fff" : "#30c0bf",
     fontWeight: 700,

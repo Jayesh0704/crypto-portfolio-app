@@ -16,12 +16,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#30c0bf", // Updated primary color
+      main: "#30c0bf", 
     },
     mode: "dark", 
   },
   typography: {
-    fontFamily: "Montserrat, sans-serif", // Ensure consistent font across the app
+    fontFamily: "Montserrat, sans-serif",
   },
 });
 

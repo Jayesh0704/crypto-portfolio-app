@@ -8,7 +8,7 @@ import Watchlist from './components/WatchList';
 import TokenTransfer from './components/TokenTransfer'; 
 import AllowanceCheck from './features/AllowanceCheck/AllowanceCheck'; 
 import AllowanceApprove from './features/AllowanceCheck/AllowanceApprove';
-
+import CoinsTable from './components/Coin/CoinsTable';
 
 import { useWalletContext } from './contexts/WalletContext'; 
 import Homepage from './features/HomePage/HomePage';
@@ -22,10 +22,11 @@ function App() {
         
         <Routes>
           <Route path="/" element={walletState.isConnected ? <Homepage /> : <WalletConnection />} />
-          <Route path="/coins/:id" element={<CoinPage/>} exact />
+          <Route path="/Coins/:id" element={<CoinPage/>} exact />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/token-transfer" element={<TokenTransfer />} />
           <Route path="/allowance-approve" element={<AllowanceApprove />} />
+          <Route path="/coins" from element={<CoinsTable/>}/>
 
           <Route path="/allowance-check" element={<AllowanceCheck />} />
         </Routes>
