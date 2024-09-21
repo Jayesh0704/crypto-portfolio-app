@@ -11,18 +11,20 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Folder Structure](#folder-structure)
+- [Tech stack](#tech-stack)
 - [APIs Used](#apis-used)
 - [Commands](#commands)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+- [References](#references)
 
 ## Introduction
 
-**Crypto Portfolio App** is a responsive and interactive cryptocurrency portfolio management web application. It allows users to connect their Ethereum wallets, track token balances, view historical balances, manage allowances, and perform token transfers seamlessly. Leveraging the power of React.js, Tailwind CSS, and the CoinGecko API, the app provides real-time data and a user-friendly interface for cryptocurrency enthusiasts.
+**Crypto Docker** is a responsive and interactive cryptocurrency portfolio management web application. It allows users to connect their Ethereum wallets, track token balances, view historical balances, manage allowances, and perform token transfers seamlessly. Leveraging the power of React.js, and the CoinGecko API, the app provides real-time data and a user-friendly interface for cryptocurrency enthusiasts.
 
-**Deployed App**: [Crypto Portfolio App](https://crypto-docker.netlify.app/) <!-- Replace with your actual deployed link -->
+**Deployed App**: [Crypto Portfolio App](https://crypto-docker.netlify.app/)
 
 ## Features
 
@@ -42,7 +44,7 @@ You can view the live app at the following link:
 👉 [Crypto Portfolio App](https://crypto-docker.netlify.app/) 
 
 ### Screenshots
-- **Checkout src/assets/All-pages-demo-pics.dox
+   [Checkout src/assets/All-pages-demo-pics.dox](https://docs.google.com/document/d/1Uo9MT8Su9hAmaZrY-T9yefFAeExze40_/edit?usp=sharing&ouid=114987110186535211354&rtpof=true&sd=true)
 
 
 ## Technologies Used
@@ -215,47 +217,40 @@ CRYPTO-PORTFOLIO-APP/
 ├── README.md
 ├── tailwind.config.js
 └── vite.config.js
+```
+
+
+
+
 
 ## Tech Stack
 
 ### Frontend
-
-- **React.js**: A JavaScript library for building user interfaces.
-- **Material UI**: A popular React UI framework with pre-built components for faster development.
-- **Tailwind CSS**: A utility-first CSS framework for styling.
-- **Recharts**: A charting library to display historical data.
-- **Ethers.js**: A library to interact with the Ethereum blockchain.
+- **React.js**: For building user interfaces.
+- **Material UI**: For styled components.
+- **Tailwind CSS**: For utility-first CSS.
+- **Recharts**: For data visualization.
+- **Ethers.js**: For interacting with the Ethereum blockchain.
 
 ### Blockchain
-
-- **Ethereum**: The app integrates with the Ethereum blockchain to perform transactions.
-- **CoinGecko API**: Fetch real-time cryptocurrency data such as prices and historical trends.
+- **Ethereum**: For smart contract interactions.
+- **CoinGecko API**: For fetching real-time and historical data.
 
 ### Build Tools
-
-- **Vite**: A fast frontend build tool and development server.
-- **Netlify**: The app is deployed on Netlify for fast and scalable hosting.
+- **Vite**: For faster and leaner builds.
+- **Netlify**: For deployment.
 
 ## APIs Used
+- **CoinGecko API**
+  - `CoinList`: Retrieves the top 100 coins by market cap.
+  - `SingleCoin`: Fetches detailed information about a coin.
+  - `HistoricalChart`: Provides historical price data.
 
-The app utilizes the CoinGecko API for fetching cryptocurrency data, including:
-
-- **Coin List**: Retrieves the top 100 coins by market cap.
-- **Single Coin**: Fetches detailed information about a specific coin.
-- **Historical Data**: Provides historical price data over a range of time periods.
-
-
-Example of API usage:
-
-```js
-export const CoinList = (currency) =>
-  `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`;
-
-export const SingleCoin = (id) =>
-  `https://api.coingecko.com/api/v3/coins/${id}`;
-
-export const HistoricalChart = (id, days = 365, currency) =>
-  `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=${currency}&days=${days}`;
+```javascript
+export const CoinList = currency => \`https://api.coingecko.com/api/v3/coins/markets?vs_currency=\${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false\`;
+export const SingleCoin = id => \`https://api.coingecko.com/api/v3/coins/\${id}\`;
+export const HistoricalChart = (id, days, currency) => \`https://api.coingecko.com/api/v3/coins/\${id}/market_chart?vs_currency=\${currency}&days=\${days}\`;
+```
 
  Ethereum Blockchain
 
@@ -271,23 +266,23 @@ Using **npm**:
 
 ```bash
 npm install
+```
 
+### Start Development Server
 
-## Start Development Server
-
-### Using npm:
+#### Using npm:
 
 ```bash
 npm run dev
+```
+### Build For Production
 
-## Build For Production
-
-### using npm:
+#### using npm:
 
 ```bash
 npm run build
-
-# Deployment - Steps for Netlify
+```
+## Deployment - Steps for Netlify
 
 1. Login to Netlify: Go to https://www.netlify.com/ and log in or sign up.
 2. New Site from Git: Click on "New site from Git" and connect your GitHub repository.
@@ -298,43 +293,51 @@ npm run build
 5. Set Up Environment Variables: If your app uses environment variables, set them up in the Netlify dashboard under "Site settings" > "Build & deploy" > "Environment".
 
 
-# Contributing
-# Contributions are welcome! Follow these steps to contribute to Crypto Portfolio App:
+## Contributing
+- Contributions are welcome! Follow these steps to contribute to Crypto Portfolio App:
 
-# Fork the Repository
-# Click the "Fork" button at the top-right corner of the repository page.
+- Fork the Repository
+- Click the "Fork" button at the top-right corner of the repository page.
 
-# Clone Your Fork
+- Clone Your Fork
+```bash
 git clone https://github.com/jayesh0704/CRYPTO-PORTFOLIO-APP.git
 cd CRYPTO-PORTFOLIO-APP
+````
 
-# Create a New Branch
+- Create a New Branch
+```bash
 git checkout -b feature/YourFeatureName
+`````
 
-# Make Your Changes
-# Implement your feature or bug fix.
+- Make Your Changes
+- Implement your feature or bug fix.
 
-# Commit Your Changes
+- Commit Your Changes
+```branch
 git commit -m "Add some feature"
+```
 
-# Push to Your Fork
+- Push to Your Fork
+```branch
 git push origin feature/YourFeatureName
+```
 
-# Create a Pull Request
-# Navigate to the original repository and click "New Pull Request."
-# Provide a clear description of your changes and the problem they solve.
+- Create a Pull Request
+- Navigate to the original repository and click "New Pull Request."
+- Provide a clear description of your changes and the problem they solve.
 
-# License
-# Distributed under the MIT License. See LICENSE for more information.
+## License
+- Distributed under the MIT License. See LICENSE for more information.
 
-# Contact
-# Project Link: https://github.com/jayesh0704/CRYPTO-PORTFOLIO-APP
-# Email: f20210873@pilani.bits-pialni.ac.in
+## Contact
+#### Project Link: https://github.com/jayesh0704/CRYPTO-PORTFOLIO-APP
+##### Email: f20210873@pilani.bits-pialni.ac.in
 
+Made with ❤️ by Jayesh
 
+## References
 
-
-
-
-
-
+- https://www.youtube.com/playlist?list=PLbtI3_MArDOnIIJxB6xFtpnhM0wTwz0x6
+- https://www.youtube.com/watch?v=QA6oTpMZp84
+- https://chat.openai.com/chat
