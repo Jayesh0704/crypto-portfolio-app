@@ -332,7 +332,7 @@ git push origin feature/YourFeatureName
 
 ## Contact
 #### Project Link: https://github.com/jayesh0704/CRYPTO-PORTFOLIO-APP
-##### Email: f20210873@pilani.bits-pialni.ac.in
+##### Email: f20210873@pilani.bits-pilani.ac.in
 
 Made with ❤️ by Jayesh
 
